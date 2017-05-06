@@ -3,25 +3,64 @@
   <head>
     <script src="jquery.js"></script>
     <script src="data_generator.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link href="https://fonts.googleapis.com/css?family=Rancho" rel="stylesheet">
   </head>
   <body>
+    <header>
+      <a href=# class="home"></a>
+      <a href=# class="get-new-tweet">Get First Tweet!</a>
+      <div class="view">All Tweets</div>
+    </header>
     <script>
-
       $(document).ready(function(){
         var $body = $('body');
-        $body.html('');
 
         var index = streams.home.length - 1;
-        while(index >= 0){
+
+        $('body').on('click', '.get-new-tweet', function() {
           var tweet = streams.home[index];
-          var $tweet = $('<div></div>');
-          $tweet.text('@' + tweet.user + ': ' + tweet.message);
+          var date = new Date();
+          var time = date.toTimeString();
+
+          var $tweet = $('<div class="tweet"></div>');
+          var $user = $('<a href=# class="user"></a>');
+          var $message = $('<div class="message"></div>');
+          var $date = $('<div class="date"></div>')
+
+          $user.text(tweet.user);
+          $user.addClass(tweet.user);
+          $message.text(tweet.message);
+          $date.text(time);
           $tweet.appendTo($body);
+          $user.appendTo($tweet);
+          $message.appendTo($tweet);
+          $date.appendTo($tweet);
+
+          $('.get-new-tweet').text('Get Next Tweet!')
           index -= 1;
-        }
+        });
+        //Click on a username to show only tweets by that user
+        $('body').on('click', '.user', function() {
+          var userText = $(this).text();
 
+          $('.user').each(function() {
+            if (!($(this).hasClass('user ' + userText))) {
+              $(this).parent().addClass('hide');
+            };
+          });
+          $('.view').text(userText);
+          $('.home').text('Back To All Tweets');
+          $('.get-new-tweet').addClass('hide')
+        });
+        //Go back to home page
+        $('.home').on('click', function() {
+          $('.user').parent().removeClass('hide');
+          $(this).text('');
+          $('.view').text('All Tweets');
+          $('.get-new-tweet').removeClass('hide')
+        });
       });
-
     </script>
   </body>
 </html>
